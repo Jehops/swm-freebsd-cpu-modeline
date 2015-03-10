@@ -6,12 +6,12 @@
 
 (in-package #:swm-freebsd-cpu-modeline)
 
-(defvar *cpu-freq* 0)
+(defvar *cpu-freq* "0")
 (defvar *cpu-stream* nil)
 (defvar *cpu-temp* 0)
 
 (defun set-cpu-stream ()
-  (setf *mail-stream*
+  (setf *cpu-stream*
 	(sb-ext:process-output
 	 (sb-ext:run-program "ml_cpu.sh" nil
 			     :output :stream
@@ -24,10 +24,11 @@
   (when (not *cpu-stream*)
     (set-cpu-stream))
   (when (listen *cpu-stream*)
-    (let ((cpu-info (stumpwm::split-string (read-line *mail-stream* nil ""))))
+    (let ((cpu-info (stumpwm::split-string
+		     (read-line *cpu-stream* nil "") " ")))
       (setf *cpu-freq* (car cpu-info))
       (setf *cpu-temp* (cl-ppcre::regex-replace ".\\d*C" (nth 1 cpu-info) ""))))
-  (format nil "~4a" *cpu-freq*))
+  (format nil "~4d" (read-from-string *cpu-freq*)))
 
 (defun fmt-freebsd-cpu-temp-modeline (ml)
   "Return the current CPU temp in degrees Celsius."

@@ -1,5 +1,8 @@
 #!/bin/sh
 
+## You may need to customize the sysctl command below to use the variables that
+## show cpu frequency and temperature.
+
 cpu_cmd="/sbin/sysctl -n dev.cpu.0.freq hw.acpi.thermal.tz0.temperature | tr '\n' ' '"
 interval=3
 stump_pid=`pgrep -a -n stumpwm`
