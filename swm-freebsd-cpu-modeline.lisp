@@ -7,29 +7,31 @@
 (in-package #:swm-freebsd-cpu-modeline)
 
 (defvar *cpu-freq* 0)
-(defvar *cpu-prev-time* 0)
+(defvar *cpu-stream* nil)
 (defvar *cpu-temp* 0)
 
-(defun update-cpu-info ()
-  (let ((now (/ (get-internal-real-time) internal-time-units-per-second)))
-    (when (or (= 0 *cpu-prev-time*) (>= (- now *cpu-prev-time*) 5))
-      (setf *cpu-prev-time* now)
-      (let ((cpu-info
-	     (stumpwm::split-string
-	      (stumpwm::run-prog-collect-output "/sbin/sysctl" "-n" "dev.cpu.0.freq" "hw.acpi.thermal.tz0.temperature"))))
-	(setf *cpu-freq* (car cpu-info))
-	(setf *cpu-temp* (cl-ppcre::regex-replace ".\\d*C" (nth 1 cpu-info) ""))))))
-
+(defun set-cpu-stream ()
+  (setf *mail-stream*
+	(sb-ext:process-output
+	 (sb-ext:run-program "ml_cpu.sh" nil
+			     :output :stream
+			     :search t
+			     :wait nil))))
+  
 (defun fmt-freebsd-cpu-freq-modeline (ml)
   "Return the current CPU frequency in MHz."
   (declare (ignore ml))
-  (update-cpu-info)
+  (when (not *cpu-stream*)
+    (set-cpu-stream))
+  (when (listen *cpu-stream*)
+    (let ((cpu-info (stumpwm::split-string (read-line *mail-stream* nil ""))))
+      (setf *cpu-freq* (car cpu-info))
+      (setf *cpu-temp* (cl-ppcre::regex-replace ".\\d*C" (nth 1 cpu-info) ""))))
   (format nil "~4a" *cpu-freq*))
 
 (defun fmt-freebsd-cpu-temp-modeline (ml)
   "Return the current CPU temp in degrees Celsius."
   (declare (ignore ml))
-  (update-cpu-info)
   (format nil "~a" *cpu-temp*))
   
 ;; Install formatters
