@@ -5,8 +5,8 @@ show the frequency and temperature of your CPU.
 
 In addition to the lisp code, there is a small Bourne shell script, ml_cpu.sh.
 Make sure this script is executable by the user running StumpWM and within the
-user's $PATH.  Have a look at the script to customize certain settings, such as
-the interval between updates.  You may need to tweek the sysctl command, so that it
+user's $PATH.  Have a look at the script to customize certain settings such as
+the interval between updates.  You may need to tweek the sysctl command so that it
 returns your CPU's frequency and temperature.
 
 FAQ
