@@ -22,8 +22,8 @@
 ## that this script and swm-freebsd-cpu-modeline.lisp are coordinated.
 ## 
 
-interval=3 ## customize this
-stump_pid=`pgrep -a -n stumpwm`
+interval=3 # customize this
+stump_pid=$(pgrep -a -n stumpwm)
 
 # while stumpwm is still running
 while kill -0 $stump_pid > /dev/null 2>&1; do
