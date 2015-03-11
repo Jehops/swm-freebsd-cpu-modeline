@@ -27,7 +27,8 @@
     (let ((cpu-info (stumpwm::split-string
 		     (read-line *cpu-stream* nil "") " ")))
       (setf *cpu-freq* (car cpu-info))
-      (setf *cpu-temp* (cl-ppcre::regex-replace ".\\d*C" (nth 1 cpu-info) ""))))
+      (when (equal "" *cpu-freq*) (setf *cpu-freq* "-0.0"))
+      (setf *cpu-temp* (cl-ppcre::regex-replace-all ".\\d*C" (nth 1 cpu-info) ""))))
   (format nil "~4d" (read-from-string *cpu-freq*)))
 
 (defun fmt-freebsd-cpu-temp-modeline (ml)
