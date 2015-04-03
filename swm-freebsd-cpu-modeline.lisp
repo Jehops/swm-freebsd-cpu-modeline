@@ -17,7 +17,7 @@
 			     :output :stream
 			     :search t
 			     :wait nil))))
-  
+
 (defun fmt-freebsd-cpu-freq-modeline (ml)
   "Return the current CPU frequency in MHz."
   (declare (ignore ml))
@@ -28,14 +28,15 @@
 		     (read-line *cpu-stream* nil "") " ")))
       (setf *cpu-freq* (car cpu-info))
       (when (equal "" *cpu-freq*) (setf *cpu-freq* "-0.0"))
-      (setf *cpu-temp* (cl-ppcre::regex-replace-all ".\\d*C" (nth 1 cpu-info) ""))))
+      ;;(setf *cpu-temp* (cl-ppcre::regex-replace-all ".\\d*C" (nth 1 cpu-info) ""))))
+      (setf *cpu-temp* (nth 1 cpu-info))))
   (format nil "~4d" (read-from-string *cpu-freq*)))
 
 (defun fmt-freebsd-cpu-temp-modeline (ml)
   "Return the current CPU temp in degrees Celsius."
   (declare (ignore ml))
   (format nil "~a" *cpu-temp*))
-  
+
 ;; Install formatters
 (stumpwm::add-screen-mode-line-formatter #\f #'fmt-freebsd-cpu-freq-modeline)
 (stumpwm::add-screen-mode-line-formatter #\t #'fmt-freebsd-cpu-temp-modeline)
