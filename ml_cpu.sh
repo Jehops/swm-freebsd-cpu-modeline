@@ -29,6 +29,6 @@ stump_pid=$(pgrep -a -n stumpwm)
 while kill -0 $stump_pid > /dev/null 2>&1; do
     echo $(/sbin/sysctl -n dev.cpu.0.freq \
 			hw.acpi.thermal.tz0.temperature | \
-		  tr '\n' ' ' | sed 's/.[0-9]C//')
+		  tr '\n' ' ' | sed 's/.[0-9]C//g')
     sleep ${interval}
 done
