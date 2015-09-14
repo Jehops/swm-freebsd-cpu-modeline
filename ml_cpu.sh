@@ -45,7 +45,7 @@ while kill -0 $stump_pid > /dev/null 2>&1; do
 			    hw.acpi.thermal.tz0.temperature | \
 		      tr '\n' ' ' | sed 's/.[0-9]C//g')
     elif [ "${hostname}" == "gly" ]; then
-	echo $(uptime | awk -F \"load averages: \" '{ print $2 }' \
+	echo $(uptime | awk -F "load averages: " '{ print $2 }' \
 		      | cut -d, -f1; \
 	       /sbin/sysctl -n \
 			    dev.cpu.0.temperature \
