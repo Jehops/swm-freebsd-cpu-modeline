@@ -29,30 +29,22 @@ stump_pid=$(pgrep -a -n stumpwm)
 hostname=$(hostname -s)
 
 # customize the interval to your liking
-if [ "$hostname" == "phe" ]; then
-    interval=3
-else
-    interval=10
-fi
-
+interval=3
 
 # while stumpwm is still running
-while kill -0 $stump_pid > /dev/null 2>&1; do
+while kill -0 "$stump_pid" > /dev/null 2>&1; do
     # you need to customize the hostnames (if you have multiple hosts, otherwise
     # remove the if-statement) and the sysctl command(s) below
-    if [ "$hostname" == "phe" ]; then
-	echo $(/sbin/sysctl -n dev.cpu.0.freq \
-			    hw.acpi.thermal.tz0.temperature | \
-		      tr '\n' ' ' | sed 's/.[0-9]C//g')
-    elif [ "${hostname}" == "gly" ]; then
-	echo $(uptime | awk -F "load averages: " '{ print $2 }' \
-		      | cut -d, -f1; \
-	       /sbin/sysctl -n \
-			    dev.cpu.0.temperature \
-			    dev.cpu.1.temperature dev.cpu.2.temperature \
-			    dev.cpu.3.temperature \
-		   | sed 's/.[0-9]C//' | paste -s -d ',' -)
-
+    if [ "$hostname" = "phe" ] || [ "$hostname" = "bravo" ]; then
+	/sbin/sysctl -n dev.cpu.0.freq \
+		     hw.acpi.thermal.tz0.temperature | \
+		      tr '\n' ' ' | sed 's/.[0-9]C//g'
+    elif [ "${hostname}" = "gly" ]; then
+	uptime | awk -F "load averages: " '{ print $2 }' | cut -d, -f1 \
+            | tr '\n' ' '
+	/sbin/sysctl -n dev.cpu.0.temperature dev.cpu.1.temperature \
+                     dev.cpu.2.temperature dev.cpu.3.temperature \
+	    | sed 's/.[0-9]C//' | paste -s -d ',' -
     fi
-    sleep ${interval}
+    sleep "$interval"
 done
