@@ -36,9 +36,9 @@ while kill -0 "$stump_pid" > /dev/null 2>&1; do
     # you need to customize the hostnames (if you have multiple hosts, otherwise
     # remove the if-statement) and the sysctl command(s) below
     if [ "$hostname" = "phe" ] || [ "$hostname" = "bravo" ]; then
-	/sbin/sysctl -n dev.cpu.0.freq \
-		     hw.acpi.thermal.tz0.temperature | \
-		      tr '\n' ' ' | sed 's/.[0-9]C//g'
+	/sbin/sysctl -n dev.cpu.0.freq hw.acpi.thermal.tz0.temperature | \
+	    tr '\n' ' ' | sed 's/.[0-9]C//g'
+        printf "\n"
     elif [ "${hostname}" = "gly" ]; then
 	printf "%2.2f " $(uptime | awk -F "load averages: " '{ print $2 }' \
                               | cut -d, -f1 | tr '\n' ' ')
