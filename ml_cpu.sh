@@ -25,7 +25,14 @@
 ## that this script and swm-freebsd-cpu-modeline.lisp are coordinated.
 ##
 
-stump_pid=$(pgrep -a -n stumpwm)
+# Set the variable stump_pid using one of these two lines.  Which line you use
+# depends on whether you run the large StumpWM executable that bundles SBCL, or
+# if you simply start SBCL and load StumpWM.  If you are using the FreeBSD
+# StumpWM package, use the second line.
+
+#stump_pid=$(pgrep -a -n stumpwm)
+stump_pid="$(pgrep -anf -U "$(id -u)" "sbcl .*stumpwm/load.lisp")"
+
 hostname=$(hostname -s)
 
 # customize the interval to your liking
