@@ -31,7 +31,7 @@
 # StumpWM package, use the second line.
 
 #stump_pid=$(pgrep -a -n stumpwm)
-stump_pid="$(pgrep -anf -U "$(id -u)" "sbcl .*stumpwm/load.lisp")"
+stump_pid="$(pgrep -anf -U "$(id -u)" "sbcl .*(stumpwm:stumpwm)")"
 
 hostname=$(hostname -s)
 
